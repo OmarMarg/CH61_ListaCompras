@@ -2,11 +2,12 @@ const txtName = document.getElementById("Name");
 const txtNumber = document.getElementById("Number");
 const btnAgregar = document.getElementById("btnAgregar");
 const alertValidacionesTexto = document.getElementById("alertValidacionesTexto");
+const alertValidaciones = document.getElementById("alertValidaciones");
 const contadorProductos = document.getElementById("contadorProductos");
 const productosTotal = document.getElementById("productosTotal");
 const precioTotal = document.getElementById("precioTotal");
 const tablaListaCompras = document.getElementById("tablaListaCompras");
-const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody")
+const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0);
 
 let cont = 0;
 let totalEnProductos = 0;
@@ -26,7 +27,7 @@ function validarCantidad(cantidad) {
 }
 
 function getPrecio() {
-    return Math.round(Math.random()*100000/100)
+    return Math.round(Math.random()*10000/100)
 }
 
 btnAgregar.addEventListener("click", function(event) {
@@ -57,19 +58,41 @@ btnAgregar.addEventListener("click", function(event) {
                     <td>${cont}</td>
                     <td>${txtName.value}</td>
                     <td>${txtNumber.value}</td>
-                    <td>${cont}</td>
+                    <td>$${precio}</td>
                     </tr>`
         totalEnProductos += Number(txtNumber.value);
-        costoTotal += precio * Number(txtNumber.valuel);
+        costoTotal += precio * Number(txtNumber.value);
 
         cuerpoTabla.insertAdjacentHTML("beforeend", row);
         contadorProductos.innerText = cont;
         productosTotal.innerText = totalEnProductos;
         precioTotal.innerText = new Intl.NumberFormat("es-MX", 
-                    { style: "currency", currency: "MXN" }).format(costoTotal);
+        { style: "currency", currency: "MXN" }).format(costoTotal);
+
+        let resumen = {
+            "cont" : cont,
+            "totalEnProductos" : totalEnProductos,
+            "costoTotal" : costoTotal
+        };
+
+        localStorage.setItem("resumen", JSON.stringify(resumen));
 
         txtName.value = "";
         txtNumber.value = "";
         txtName.focus();
     }
-})
+});
+
+window.addEventListener("load", function (event) {
+    event.preventDefault();
+    if(this.localStorage.getItem("resumen") !=null ) {
+        let resumen = JSON.parse(this.localStorage.getItem("resumen"));
+        cont = resumen.cont;
+        totalEnProductos = resumen.totalEnProductos;
+        precioTotal = resumen.precioTotal;
+    }
+    contadorProductos.innerText = cont;
+    productosTotal.innerText = totalEnProductos;
+    precioTotal.innerText = new Intl.NumberFormat("es-MX", 
+    { style: "currency", currency: "MXN" }).format(costoTotal);
+});
