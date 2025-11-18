@@ -1,6 +1,7 @@
 const txtName = document.getElementById("Name");
 const txtNumber = document.getElementById("Number");
 const btnAgregar = document.getElementById("btnAgregar");
+const btnClear = document.getElementById("btnClear");
 const alertValidacionesTexto = document.getElementById("alertValidacionesTexto");
 const alertValidaciones = document.getElementById("alertValidaciones");
 const contadorProductos = document.getElementById("contadorProductos");
@@ -27,7 +28,7 @@ function validarCantidad(cantidad) {
 }
 
 function getPrecio() {
-    return Math.round(Math.random()*10000/100)
+    return Math.round(Math.random()*10000/100).toFixed(2);
 }
 
 btnAgregar.addEventListener("click", function(event) {
@@ -91,6 +92,24 @@ btnAgregar.addEventListener("click", function(event) {
         txtNumber.value = "";
         txtName.focus();
     }
+});
+
+btnClear.addEventListener("click",function (event) {
+    event.preventDefault();
+    txtName.value = "";
+    txtNumber.value = "";
+
+    cont = 0;
+    totalEnProductos = 0;
+    costoTotal = 0;
+
+    cuerpoTabla.innerHTML = "";
+
+    contadorProductos.innerText = "0";
+    productosTotal.innerText = "0";
+    precioTotal.innerText = "$0";
+
+    localStorage.clear();
 });
 
 window.addEventListener("load", function (event) {
